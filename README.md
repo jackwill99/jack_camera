@@ -1,4 +1,4 @@
-## Jack General
+## Jack Camera
 
 This package is camera components for flutter projects. So, you will need to set up camera configuration.
 
