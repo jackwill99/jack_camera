@@ -7,6 +7,23 @@ import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:scan/scan.dart';
 
+class JackQRScanResult {
+  final String scannedValue;
+  final Map<String, dynamic> actualValue;
+
+  final bool decrypt;
+
+  /// ## API
+  /// decrypt -> bool (This is to decide successful or failed qr scanner)
+  /// scannedValue -> is the encrypted base64 code
+  /// actualValue -> is the decrypted value
+  JackQRScanResult({
+    required this.scannedValue,
+    required this.actualValue,
+    required this.decrypt,
+  });
+}
+
 class JackQRCamera extends StatefulWidget {
   final String securePassword;
   final bool passNTP;
