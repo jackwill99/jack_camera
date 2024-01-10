@@ -5,7 +5,6 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jack_camera/src/security/encrypt_decrypt/change_to_encrypted.dart';
 import 'package:jack_camera/src/security/encrypt_decrypt/encrypt%20_data.dart';
@@ -151,7 +150,7 @@ class _JackQRCameraState extends State<JackQRCamera> {
           Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
-              padding: EdgeInsets.only(bottom: 60.h),
+              padding: const EdgeInsets.only(bottom: 60),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -421,4 +420,13 @@ class NTPDate with ChangeNotifier {
 
     notifyListeners();
   }
+}
+
+extension on int {
+  SizedBox get verticalSpace => SizedBox(
+        height: toDouble(),
+      );
+  SizedBox get horizontalSpace => SizedBox(
+        width: toDouble(),
+      );
 }
