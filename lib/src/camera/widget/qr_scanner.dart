@@ -2,6 +2,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -164,9 +165,14 @@ class _JackQRCameraState extends State<JackQRCamera> {
                           color: Colors.white),
                       child: IconButton(
                         onPressed: () async {
+                          final plugin = DeviceInfoPlugin();
+                           AndroidDeviceInfo? android;
+                           if(Platform.isAndroid){
+                            android = await plugin.androidInfo;
+                           }
                           final photoRequest = Platform.isIOS
                               ? await Permission.photos.request()
-                              : await Permission.storage.request();
+                              : android != null && android.version.sdkInt < 33 ? await Permission.storage.request() : PermissionStatus.granted;
                           if (photoRequest.isDenied) return;
                           if (photoRequest.isPermanentlyDenied) {
                             widget.permissionModel?.call();
