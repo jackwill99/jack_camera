@@ -111,13 +111,13 @@ class _JackQRCameraState extends State<JackQRCamera> {
             onCapture: (qrValue) async {
               final data = await evaluation(qrValue, true);
               controller.pause();
-              if (!mounted) return;
+              if (!context.mounted) return;
               Navigator.of(context).pop(data);
             },
           ),
           Column(
             children: [
-              30.verticalSpace,
+              const SizedBox(height: 30),
               GestureDetector(
                 onTap: () {
                   controller.pause();
@@ -143,7 +143,7 @@ class _JackQRCameraState extends State<JackQRCamera> {
                   ),
                 ),
               ),
-              30.verticalSpace,
+              const SizedBox(height: 30),
               if (widget.title != null) widget.title!,
             ],
           ),
@@ -166,13 +166,15 @@ class _JackQRCameraState extends State<JackQRCamera> {
                       child: IconButton(
                         onPressed: () async {
                           final plugin = DeviceInfoPlugin();
-                           AndroidDeviceInfo? android;
-                           if(Platform.isAndroid){
+                          AndroidDeviceInfo? android;
+                          if (Platform.isAndroid) {
                             android = await plugin.androidInfo;
-                           }
+                          }
                           final photoRequest = Platform.isIOS
                               ? await Permission.photos.request()
-                              : android != null && android.version.sdkInt < 33 ? await Permission.storage.request() : PermissionStatus.granted;
+                              : android != null && android.version.sdkInt < 33
+                                  ? await Permission.storage.request()
+                                  : PermissionStatus.granted;
                           if (photoRequest.isDenied) return;
                           if (photoRequest.isPermanentlyDenied) {
                             widget.permissionModel?.call();
@@ -180,7 +182,7 @@ class _JackQRCameraState extends State<JackQRCamera> {
                             final data = await _getImage();
                             if (data == null) return;
                             controller.pause();
-                            if (!mounted) return;
+                            if (!context.mounted) return;
                             Navigator.of(context).pop(data);
                           }
                         },
@@ -190,7 +192,7 @@ class _JackQRCameraState extends State<JackQRCamera> {
                         ),
                       ),
                     ),
-                  if (widget.showImagePicker) 20.horizontalSpace,
+                  if (widget.showImagePicker) const SizedBox(width: 20),
                   Container(
                     height: 50,
                     width: 50,
