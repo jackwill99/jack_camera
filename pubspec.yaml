@@ -17,11 +17,7 @@ dependencies:
 
     image_cropper: ^5.0.0
     image_picker: ^0.8.9
-    scan: ^1.6.0
-    dio: ^5.2.1+1
-    encrypt: ^5.0.1
-    tuple: ^2.0.1
-    crypto: ^3.0.2
+    scan: ^1.6.0    
     device_info_plus: ^10.0.1
 
 dev_dependencies:
