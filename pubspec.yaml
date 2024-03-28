@@ -8,22 +8,23 @@ environment:
     flutter: ">=3.3.0"
 
 dependencies:
-    flutter:
-        sdk: flutter
     # camera
     camera: ^0.10.5+9
-    # User Permission
-    permission_handler: ^10.4.3
+    device_info_plus: ^9.0.2
+    flutter:
+        sdk: flutter
 
     image_cropper: ^5.0.0
     image_picker: ^0.8.9
-    scan: ^1.6.0    
-    device_info_plus: ^10.0.1
+    mobile_scanner: ^5.0.0-beta.2
+    # User Permission
+    permission_handler: ^10.4.3
+    scan: ^1.6.0
 
 dev_dependencies:
+    flutter_lints: ^2.0.0
     flutter_test:
         sdk: flutter
-    flutter_lints: ^2.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

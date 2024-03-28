@@ -1,8 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:io';
-import 'package:image_cropper/image_cropper.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
+import "dart:io";
+
+import "package:image_cropper/image_cropper.dart";
+import "package:image_picker/image_picker.dart";
+import "package:permission_handler/permission_handler.dart";
 
 class JackPickCropImage {
   final List<PlatformUiSettings>? uiSettings;
@@ -50,6 +51,7 @@ class JackPickCropImage {
   File? _selectedFile;
   final _picker = ImagePicker();
 
+  // ignore: avoid_setters_without_getters
   set setImage(File? image) {
     _image = image;
   }
@@ -58,6 +60,7 @@ class JackPickCropImage {
     return _image;
   }
 
+  // ignore: avoid_setters_without_getters
   set setSelectedFile(File? file) {
     _selectedFile = file;
   }
@@ -96,7 +99,9 @@ class JackPickCropImage {
     /// android
     /// if tow time don't allow -> permanentlyDenied -> firstTime -> denied
 
-    if (status == PermissionStatus.denied) return null;
+    if (status == PermissionStatus.denied) {
+      return null;
+    }
     if (status == PermissionStatus.permanentlyDenied) {
       // if (Platform.isIOS) {
       //   openAppSettings();
@@ -120,7 +125,9 @@ class JackPickCropImage {
   }
 
   Future<File?> _onStatusRequestedCamera(status) async {
-    if (status == PermissionStatus.denied) return null;
+    if (status == PermissionStatus.denied) {
+      return null;
+    }
     if (status == PermissionStatus.permanentlyDenied) {
       // if (Platform.isIOS) {
       //   openAppSettings();
@@ -153,14 +160,13 @@ class JackPickCropImage {
     }
 
     if (_image != null) {
-      CroppedFile? cropped = await ImageCropper().cropImage(
+      final CroppedFile? cropped = await ImageCropper().cropImage(
         sourcePath: _image!.path,
         aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
         compressQuality: 100,
         maxWidth: 700,
         maxHeight: 700,
         cropStyle: CropStyle.circle,
-        compressFormat: ImageCompressFormat.jpg,
         aspectRatioPresets: [
           CropAspectRatioPreset.square,
         ],
@@ -191,7 +197,7 @@ class JackPickCropImage {
         setSelectedFile = File(cropped.path);
       }
       // delete image camera
-      if (source.toString() == 'ImageSource.camera' && _image!.existsSync()) {
+      if (source.toString() == "ImageSource.camera" && _image!.existsSync()) {
         _image!.deleteSync();
       }
       setImage = null;

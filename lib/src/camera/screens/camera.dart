@@ -1,20 +1,20 @@
-import 'dart:io';
+import "dart:async";
+import "dart:io";
 
-import 'package:camera/camera.dart';
-import 'package:flutter/material.dart';
+import "package:camera/camera.dart";
+import "package:flutter/material.dart";
 
 /// This will return imageUintBase and imagePath
 ///
 /// First is base64 image data and
 /// Second is the FilePath of the image
 class JackCamera extends StatefulWidget {
-  static const routeName = 'camera-page';
-  final List<CameraDescription> camera;
-
   const JackCamera({
-    Key? key,
     required this.camera,
+    Key? key,
   }) : super(key: key);
+  static const routeName = "camera-page";
+  final List<CameraDescription> camera;
 
   @override
   State<JackCamera> createState() => _JackCameraState();
@@ -42,7 +42,7 @@ class _JackCameraState extends State<JackCamera> with WidgetsBindingObserver {
     // Hide the status bar
     // SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
     super.initState();
-    cameraInit(widget.camera[_isRearCameraSelected ? 0 : 1]);
+    unawaited(cameraInit(widget.camera[_isRearCameraSelected ? 0 : 1]));
   }
 
   // Future<void> _requestAccess() async {
@@ -66,8 +66,8 @@ class _JackCameraState extends State<JackCamera> with WidgetsBindingObserver {
     // Next, initialize the controller. This returns a Future.
     _initializeControllerFuture = _controller.initialize();
 
-    zoomLevelSetup();
-    exposureControlSetup();
+    await zoomLevelSetup();
+    await exposureControlSetup();
   }
 
   /// after intialization camera, setCameraZoom
@@ -105,14 +105,16 @@ class _JackCameraState extends State<JackCamera> with WidgetsBindingObserver {
   @override
   void dispose() {
     // Dispose of the controller when the widget is disposed.
-    _controller.dispose();
+    unawaited(_controller.dispose());
     super.dispose();
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
-    print("----------------------$AppLifecycleState----------------------");
+    debugPrint(
+      "----------------------$AppLifecycleState----------------------",
+    );
 
     /// Running the camera on any device is considered a memory-hungry task,
     /// so how you handle freeing up the memory resources, and when that occurs, is important.
@@ -125,17 +127,16 @@ class _JackCameraState extends State<JackCamera> with WidgetsBindingObserver {
 
     if (state == AppLifecycleState.inactive) {
       // Free up memory when camera not active
-      cameraController.dispose();
+      unawaited(cameraController.dispose());
     } else if (state == AppLifecycleState.resumed) {
       // Reinitialize the camera with same properties
-      cameraInit(cameraController.description);
+      unawaited(cameraInit(cameraController.description));
     }
   }
 
   Future<void> _takeCapture() async {
     // Take the Picture in a try / catch block. If anything goes wrong,
     // catch the error.
-    print('hay');
     try {
       // Ensure that the camera is initialized.
       await _initializeControllerFuture;
@@ -144,20 +145,26 @@ class _JackCameraState extends State<JackCamera> with WidgetsBindingObserver {
       // where it was saved.
       final image = await _controller.takePicture();
 
-      if (!mounted) return;
+      if (!mounted) {
+        return;
+      }
 
       // If the picture was taken, display it on a new screen.
       final productImage = await image.readAsBytes();
-      if (!mounted) return;
+      if (!mounted) {
+        return;
+      }
       // context.read<CameraProvider>().updateUintBase(productImage);
       // context.read<CameraProvider>().updateFilePath(File(image.path));
-      print(image.path);
+      debugPrint(image.path);
       Navigator.of(context)
           .pop({"imageUintBase": productImage, "imagePath": File(image.path)});
     } catch (e) {
       // If an error occurs, log the error to the console.
-      print("----------------------Camera can't Capture----------------------");
-      print(e);
+      debugPrint(
+        "----------------------Camera can't Capture----------------------",
+      );
+      debugPrint(e.toString());
     }
   }
 
@@ -185,7 +192,6 @@ class _JackCameraState extends State<JackCamera> with WidgetsBindingObserver {
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(
@@ -194,7 +200,7 @@ class _JackCameraState extends State<JackCamera> with WidgetsBindingObserver {
                         child: GestureDetector(
                           onTap: () => Navigator.of(context).pop(),
                           child: const Text(
-                            'Close',
+                            "Close",
                             style: TextStyle(color: Colors.white, fontSize: 18),
                           ),
                         ),
@@ -211,7 +217,7 @@ class _JackCameraState extends State<JackCamera> with WidgetsBindingObserver {
                       if (snapshot.connectionState == ConnectionState.done) {
                         // If the Future is complete, display the preview.
 
-                        return Container(
+                        return DecoratedBox(
                           decoration: const BoxDecoration(color: Colors.black),
                           child: Center(
                             child: CameraPreview(_controller),
@@ -236,8 +242,9 @@ class _JackCameraState extends State<JackCamera> with WidgetsBindingObserver {
                       height: 140,
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 0, 0, 0),
-                          border: Border.all(color: Colors.red)),
+                        color: const Color.fromARGB(255, 0, 0, 0),
+                        border: Border.all(color: Colors.red),
+                      ),
                       child: Column(
                         children: [
                           /* --------------------- zoom level control -----------------------  */
@@ -258,7 +265,7 @@ class _JackCameraState extends State<JackCamera> with WidgetsBindingObserver {
                                   },
                                 ),
                               ),
-                              Container(
+                              DecoratedBox(
                                 decoration: BoxDecoration(
                                   color: Colors.black87,
                                   borderRadius: BorderRadius.circular(10.0),
@@ -266,7 +273,7 @@ class _JackCameraState extends State<JackCamera> with WidgetsBindingObserver {
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Text(
-                                    '${_currentZoomLevel.toStringAsFixed(1)}x',
+                                    "${_currentZoomLevel.toStringAsFixed(1)}x",
                                     style: const TextStyle(color: Colors.white),
                                   ),
                                 ),
@@ -276,7 +283,6 @@ class _JackCameraState extends State<JackCamera> with WidgetsBindingObserver {
                           /* +++++++++++++++++ camera bottom control +++++++++++++++++ */
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               const SizedBox(
                                 width: 50,
@@ -296,13 +302,15 @@ class _JackCameraState extends State<JackCamera> with WidgetsBindingObserver {
                                 ),
                               ),
                               GestureDetector(
-                                onTap: () {
+                                onTap: () async {
                                   setState(() {
                                     _isRearCameraSelected =
                                         !_isRearCameraSelected;
                                   });
-                                  cameraInit(widget
-                                      .camera[_isRearCameraSelected ? 0 : 1]);
+                                  await cameraInit(
+                                    widget
+                                        .camera[_isRearCameraSelected ? 0 : 1],
+                                  );
                                 },
                                 child: const Icon(
                                   Icons.flip_camera_ios_rounded,
@@ -332,7 +340,7 @@ class _JackCameraState extends State<JackCamera> with WidgetsBindingObserver {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Container(
+                      DecoratedBox(
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(10.0),
@@ -340,7 +348,7 @@ class _JackCameraState extends State<JackCamera> with WidgetsBindingObserver {
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            '${_currentExposureOffset.toStringAsFixed(1)}x',
+                            "${_currentExposureOffset.toStringAsFixed(1)}x",
                             style: const TextStyle(color: Colors.black),
                           ),
                         ),
@@ -364,7 +372,7 @@ class _JackCameraState extends State<JackCamera> with WidgetsBindingObserver {
                             },
                           ),
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),
