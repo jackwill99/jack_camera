@@ -65,7 +65,9 @@ class _JackMobileScannerState extends State<JackMobileScanner>
       if (!context.mounted) {
         return;
       }
-      Navigator.of(context).pop(data);
+      if (Navigator.of(context).canPop()) {
+        Navigator.of(context).pop(data);
+      }
     }
   }
 
@@ -94,7 +96,9 @@ class _JackMobileScannerState extends State<JackMobileScanner>
   void _handleBarcode(BarcodeCapture barcodes) {
     final code = barcodes.barcodes.first.displayValue;
     unawaited(controller.stop());
-    Navigator.of(context).pop(code);
+    if (Navigator.of(context).canPop()) {
+      Navigator.of(context).pop(code);
+    }
   }
 
   @override
@@ -181,7 +185,9 @@ class _JackMobileScannerState extends State<JackMobileScanner>
               GestureDetector(
                 onTap: () {
                   unawaited(controller.stop());
-                  Navigator.of(context).pop();
+                  if (Navigator.of(context).canPop()) {
+                    Navigator.of(context).pop();
+                  }
                 },
                 child: Padding(
                   padding: const EdgeInsets.only(top: 8, right: 16),
