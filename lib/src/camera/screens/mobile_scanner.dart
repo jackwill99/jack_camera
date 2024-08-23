@@ -95,6 +95,7 @@ class _JackMobileScannerState extends State<JackMobileScanner>
 
   void _handleBarcode(BarcodeCapture barcodes) {
     final code = barcodes.barcodes.first.displayValue;
+    unawaited(_subscription?.cancel());
     unawaited(controller.stop());
     if (Navigator.of(context).canPop()) {
       Navigator.of(context).pop(code);
