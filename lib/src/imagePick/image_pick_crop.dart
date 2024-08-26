@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import "dart:io";
 
+import "package:device_info_plus/device_info_plus.dart";
 import "package:image_cropper/image_cropper.dart";
 import "package:image_picker/image_picker.dart";
 import "package:permission_handler/permission_handler.dart";
@@ -80,7 +81,14 @@ class JackPickCropImage {
   }
 
   Future<File?> takeAndCropFromStorage() async {
-    final result = await requestPermission(Permission.storage);
+    final plugin = DeviceInfoPlugin();
+    AndroidDeviceInfo? android;
+    if (Platform.isAndroid) {
+      android = await plugin.androidInfo;
+    }
+    final result = android != null && android.version.sdkInt < 33
+        ? await requestPermission(Permission.storage)
+        : PermissionStatus.granted;
     return _onStatusRequested(result);
   }
 
