@@ -16,7 +16,7 @@ dependencies:
 
     image_cropper: ^5.0.0
     image_picker: ^0.8.9
-    mobile_scanner: ^5.2.1
+    mobile_scanner: ^5.0.0-beta.2
     # User Permission
     permission_handler: ^10.4.3
 
