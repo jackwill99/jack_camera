@@ -25,7 +25,7 @@ analyzer:
 
         #   Styled Rules
         always_declare_return_types: error
-        always_put_control_body_on_new_line: error
+        always_put_control_body_on_new_line: ignore error
         always_put_required_named_parameters_first: error
         #    - always_specify_types
         annotate_overrides: error
