@@ -174,10 +174,7 @@ class JackPickCropImage {
         compressQuality: 100,
         maxWidth: 700,
         maxHeight: 700,
-        cropStyle: CropStyle.circle,
-        aspectRatioPresets: [
-          CropAspectRatioPreset.square,
-        ],
+
         uiSettings: uiSettings,
         // uiSettings: [
         //   AndroidUiSettings(
