@@ -175,7 +175,7 @@ class _JackMobileScannerState extends State<JackMobileScanner>
         children: [
           MobileScanner(
             controller: controller,
-            errorBuilder: (context, error) {
+            errorBuilder: (context, error, _) {
               return ScannerErrorWidget(error: error);
             },
           ),
